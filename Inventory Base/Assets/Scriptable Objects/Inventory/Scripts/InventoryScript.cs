@@ -5,5 +5,5 @@ using UnityEngine;
 [System.Serializable]
 public class InventoryScript
 {
-    public List<InventorySlot> slots = new List<InventorySlot>();
+    public InventorySlot[] slots = new InventorySlot[24];
 }

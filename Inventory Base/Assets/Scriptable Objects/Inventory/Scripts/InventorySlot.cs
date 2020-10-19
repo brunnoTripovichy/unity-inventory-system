@@ -9,7 +9,21 @@ public class InventorySlot
     public int id;
     public int amount;
 
+    public InventorySlot()
+    {
+        item = null;
+        id = -1;
+        amount = 0;
+    }
+
     public InventorySlot(ItemScript _itemObject, int _id, int _amount)
+    {
+        item = _itemObject;
+        id = _id;
+        amount = _amount;
+    }
+
+    public void UpdateSlot(ItemScript _itemObject, int _id, int _amount)
     {
         item = _itemObject;
         id = _id;

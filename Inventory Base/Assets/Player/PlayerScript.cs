@@ -33,6 +33,6 @@ public class PlayerScript : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        inventory.container.slots.Clear();
+        inventory.container.slots = new InventorySlot[24];
     }
 }

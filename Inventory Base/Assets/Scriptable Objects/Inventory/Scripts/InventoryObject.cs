@@ -19,20 +19,55 @@ public class InventoryObject : ScriptableObject
         // Change to a bool isStackable on itemScript
         if (item.buffs.Length > 0)
         {
-            container.slots.Add(new InventorySlot(item, item.id, amount));
+            SetEmptySlot(item, amount);
             return;
         }
 
         foreach (var slot in container.slots)
         {
-            if (slot.item.id == item.id)
+            if (slot.id == item.id)
             {
                 slot.AddAmount(amount);
                 return;
             }
         }
 
-        container.slots.Add(new InventorySlot(item, item.id, amount));
+        SetEmptySlot(item, amount);
+
+    }
+
+    public InventorySlot SetEmptySlot(ItemScript item, int _amount)
+    {
+        for (int i = 0; i < container.slots.Length; i++)
+        {
+            if (container.slots[i].id <= -1)
+            {
+                container.slots[i].UpdateSlot(item, item.id, _amount);
+                return container.slots[i];
+            }
+        }
+
+        // Set up functionality for when its full
+        return null;
+    }
+
+    public void MoveItem(InventorySlot slot1, InventorySlot slot2)
+    {
+        InventorySlot tem = new InventorySlot(slot2.item, slot2.id, slot2.amount);
+        slot2.UpdateSlot(slot1.item, slot1.id, slot1.amount);
+        slot1.UpdateSlot(tem.item, tem.id, tem.amount);
+    }
+
+    public void RemoveItem(ItemScript item)
+    {
+        foreach (var slot in container.slots)
+        {
+            if (slot.item == item)
+            {
+                slot.UpdateSlot(null, -1, 0);
+            }
+        }
+
     }
 
     [ContextMenu("Save")]
@@ -66,7 +101,13 @@ public class InventoryObject : ScriptableObject
             // IFormatter Method
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new FileStream(string.Concat(Application.persistentDataPath, savePath), FileMode.Open, FileAccess.Read);
-            container = (InventoryScript)formatter.Deserialize(stream);
+            InventoryScript newContainer = (InventoryScript)formatter.Deserialize(stream);
+
+            for (int i = 0; i < container.slots.Length; i++)
+            {
+                container.slots[i].UpdateSlot(newContainer.slots[i].item, newContainer.slots[i].id, newContainer.slots[i].amount);
+            }
+
             stream.Close();
         }
     }

@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class DisplayInventoryScript : MonoBehaviour
 {
+
+    public MouseItem mouseItem = new MouseItem();
 
     public GameObject inventoryPrefab;
     public InventoryObject inventory;
@@ -16,55 +20,37 @@ public class DisplayInventoryScript : MonoBehaviour
     public int NUMBER_OF_COLUMNS;
     public int Y_SPACE_BETWEEM_ITEM;
 
-    Dictionary<InventorySlot, GameObject> itemsDisplayed = new Dictionary<InventorySlot, GameObject>();
+    Dictionary<GameObject, InventorySlot> itemsDisplayed = new Dictionary<GameObject, InventorySlot>();
 
     // Start is called before the first frame update
     void Start()
     {
-        CreateDisplay();
+        CreateSlots();
     }
 
     // Update is called once per frame
     void Update()
     {
-        UpdateDisplay();
+        UpdateSlots();
     }
 
-    public void CreateDisplay()
+    public void UpdateSlots()
     {
-
-        for (int i = 0; i < inventory.container.slots.Count; i++)
+        foreach (KeyValuePair<GameObject, InventorySlot> _slot in itemsDisplayed)
         {
-            InventorySlot slot = inventory.container.slots[i];
-            CreateItem(i, slot);
-        }
-    }
-
-    public void UpdateDisplay()
-    {
-        for (int i = 0; i < inventory.container.slots.Count; i++)
-        {
-
-            InventorySlot slot = inventory.container.slots[i];
-
-            if (itemsDisplayed.ContainsKey(slot))
+            if (_slot.Value.id >= 0)
             {
-                itemsDisplayed[slot].GetComponentInChildren<TextMeshProUGUI>().text = slot.amount.ToString("n0");
+                _slot.Key.transform.GetChild(0).GetComponentInChildren<Image>().sprite = inventory.database.getItem[_slot.Value.item.id].uiDisplay;
+                _slot.Key.transform.GetChild(0).GetComponentInChildren<Image>().color = new Color(1, 1, 1, 1);
+                _slot.Key.GetComponentInChildren<TextMeshProUGUI>().text = _slot.Value.amount == 1 ? "" : _slot.Value.amount.ToString("n0");
             }
             else
             {
-                CreateItem(i, slot);
+                _slot.Key.transform.GetChild(0).GetComponentInChildren<Image>().sprite = null;
+                _slot.Key.transform.GetChild(0).GetComponentInChildren<Image>().color = new Color(1, 1, 1, 0);
+                _slot.Key.GetComponentInChildren<TextMeshProUGUI>().text = "";
             }
         }
-    }
-
-    private void CreateItem(int i, InventorySlot slot)
-    {
-        var obj = Instantiate(inventoryPrefab, Vector3.zero, Quaternion.identity, transform);
-        obj.transform.GetChild(0).GetComponentInChildren<Image>().sprite = inventory.database.getItem[slot.item.id].uiDisplay;
-        obj.GetComponent<RectTransform>().localPosition = GetPosition(i);
-        obj.GetComponentInChildren<TextMeshProUGUI>().text = slot.amount.ToString("n0");
-        itemsDisplayed.Add(slot, obj);
     }
 
     public Vector3 GetPosition(int index)
@@ -72,4 +58,96 @@ public class DisplayInventoryScript : MonoBehaviour
         return new Vector3(X_START + (X_SPACE_BETWEEM_ITEM * (index % NUMBER_OF_COLUMNS)), Y_START + (-Y_SPACE_BETWEEM_ITEM * (index / NUMBER_OF_COLUMNS)), 0f);
     }
 
+    public void CreateSlots()
+    {
+        itemsDisplayed = new Dictionary<GameObject, InventorySlot>();
+
+        for (int i = 0; i < inventory.container.slots.Length; i++)
+        {
+            var obj = Instantiate(inventoryPrefab, Vector3.zero, Quaternion.identity, transform);
+            obj.GetComponent<RectTransform>().localPosition = GetPosition(i);
+
+            AddEvent(obj, EventTriggerType.PointerEnter, delegate { OnEnter(obj); });
+            AddEvent(obj, EventTriggerType.PointerExit, delegate { OnExit(obj); });
+            AddEvent(obj, EventTriggerType.BeginDrag, delegate { OnDragStart(obj); });
+            AddEvent(obj, EventTriggerType.EndDrag, delegate { OnDragEnd(obj); });
+            AddEvent(obj, EventTriggerType.Drag, delegate { OnDrag(obj); });
+
+            itemsDisplayed.Add(obj, inventory.container.slots[i]);
+        }
+    }
+
+    public void OnEnter(GameObject obj)
+    {
+        mouseItem.hoverObj = obj;
+        if (itemsDisplayed.ContainsKey(obj))
+        {
+            mouseItem.hoverSlot = itemsDisplayed[obj];
+        }
+    }
+
+    public void OnExit(GameObject obj)
+    {
+        mouseItem.hoverObj = null;
+        mouseItem.hoverSlot = null;
+    }
+
+    public void OnDragStart(GameObject obj)
+    {
+        var mouseObject = new GameObject();
+        var rectTrans = mouseObject.AddComponent<RectTransform>();
+        rectTrans.sizeDelta = new Vector2(200, 200);
+        mouseObject.transform.SetParent(transform.parent);
+
+        if (itemsDisplayed[obj].id >= 0)
+        {
+            var img = mouseObject.AddComponent<Image>();
+            img.sprite = inventory.database.getItem[itemsDisplayed[obj].id].uiDisplay;
+            img.raycastTarget = false;
+        }
+
+        mouseItem.obj = mouseObject;
+        mouseItem.slot = itemsDisplayed[obj];
+    }
+
+    public void OnDragEnd(GameObject obj)
+    {
+        if (mouseItem.hoverObj)
+        {
+            inventory.MoveItem(itemsDisplayed[obj], itemsDisplayed[mouseItem.hoverObj]);
+        }
+        else
+        {
+            inventory.RemoveItem(itemsDisplayed[obj].item);
+        }
+
+        Destroy(mouseItem.obj);
+        mouseItem.slot = null;
+    }
+
+    public void OnDrag(GameObject obj)
+    {
+        if (mouseItem.obj != null)
+        {
+            mouseItem.obj.GetComponent<RectTransform>().position = Input.mousePosition;
+        }
+    }
+
+    private void AddEvent(GameObject obj, EventTriggerType type, UnityAction<BaseEventData> action)
+    {
+        EventTrigger trigger = obj.GetComponent<EventTrigger>();
+        var eventTrigger = new EventTrigger.Entry();
+        eventTrigger.eventID = type;
+        eventTrigger.callback.AddListener(action);
+        trigger.triggers.Add(eventTrigger);
+    }
+
+}
+
+public class MouseItem
+{
+    public GameObject obj;
+    public InventorySlot slot;
+    public InventorySlot hoverSlot;
+    public GameObject hoverObj;
 }
