@@ -3,13 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class ItemScript
+public class Item
 {
     public int id;
     public string name;
     public ItemBuffScript[] buffs;
 
-    public ItemScript(ItemObject itemObject)
+    public Item()
+    {
+        id = -1;
+        name = "";
+    }
+
+    public Item(ItemObject itemObject)
     {
         id = itemObject.id;
         name = itemObject.name;

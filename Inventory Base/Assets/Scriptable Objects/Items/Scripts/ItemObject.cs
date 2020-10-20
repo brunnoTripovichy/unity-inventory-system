@@ -5,7 +5,11 @@ using UnityEngine;
 public enum ItemType
 {
     FOOD,
-    EQUIPMENT,
+    HELMET,
+    WEAPON,
+    SHIELD,
+    BOOTS,
+    ARMOR,
     DEFAULT
 }
 
@@ -29,9 +33,9 @@ public abstract class ItemObject : ScriptableObject
     [TextArea(15,20)]
     public string description;
 
-    public ItemScript CreateItem()
+    public Item CreateItem()
     {
-        ItemScript itemScript = new ItemScript(this);
+        Item itemScript = new Item(this);
         return itemScript;
     }
     

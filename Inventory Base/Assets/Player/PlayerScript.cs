@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerScript : MonoBehaviour
 {
 
+    public MouseItem mouseItem = new MouseItem();
     public InventoryObject inventory;
 
     private void Update()
@@ -26,7 +27,7 @@ public class PlayerScript : MonoBehaviour
         
         if (itemScript)
         {
-            inventory.AddItem(new ItemScript(itemScript.item), 1);
+            inventory.AddItem(new Item(itemScript.item), 1);
             Destroy(other.gameObject);
         }
     }

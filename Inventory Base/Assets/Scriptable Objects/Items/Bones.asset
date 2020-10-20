@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 0
   uiDisplay: {fileID: 1660957820977104790, guid: e5797ff041118c8499506c3c95a51415, type: 3}
-  type: 2
+  type: 6
+  buffs: []
   description: The left overs of those you slain.

@@ -12,9 +12,9 @@ public class InventoryObject : ScriptableObject
 
     public string savePath;
     public ItemDatabaseObject database;
-    public InventoryScript container;
+    public Inventory container;
 
-    public void AddItem(ItemScript item, int amount)
+    public void AddItem(Item item, int amount)
     {
         // Change to a bool isStackable on itemScript
         if (item.buffs.Length > 0)
@@ -36,7 +36,7 @@ public class InventoryObject : ScriptableObject
 
     }
 
-    public InventorySlot SetEmptySlot(ItemScript item, int _amount)
+    public InventorySlot SetEmptySlot(Item item, int _amount)
     {
         for (int i = 0; i < container.slots.Length; i++)
         {
@@ -58,7 +58,7 @@ public class InventoryObject : ScriptableObject
         slot1.UpdateSlot(tem.item, tem.id, tem.amount);
     }
 
-    public void RemoveItem(ItemScript item)
+    public void RemoveItem(Item item)
     {
         foreach (var slot in container.slots)
         {
@@ -101,7 +101,7 @@ public class InventoryObject : ScriptableObject
             // IFormatter Method
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new FileStream(string.Concat(Application.persistentDataPath, savePath), FileMode.Open, FileAccess.Read);
-            InventoryScript newContainer = (InventoryScript)formatter.Deserialize(stream);
+            Inventory newContainer = (Inventory)formatter.Deserialize(stream);
 
             for (int i = 0; i < container.slots.Length; i++)
             {
@@ -115,7 +115,7 @@ public class InventoryObject : ScriptableObject
     [ContextMenu("Clear")]
     public void Clear()
     {
-        container = new InventoryScript();
+        container.Clear();
     }
 
 }
