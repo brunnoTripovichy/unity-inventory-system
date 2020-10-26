@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class ItemBuffScript
+public class ItemBuff
 {
     public Attributes attribute;
     public int value;
     public int min;
     public int max;
 
-    public ItemBuffScript(int _min, int _max)
+    public ItemBuff(int _min, int _max)
     {
         min = _min;
         max = _max;

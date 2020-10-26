@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class StaticInterfaceScript : UserInventoryInterfaceScript
+public class StaticInventoryInterface : UserInventoryInterface
 {
 
     public GameObject[] slots;
 
     public override void CreateSlots()
     {
-        itemsDisplayed = new Dictionary<GameObject, InventorySlot>();
+        slotsOnInterface = new Dictionary<GameObject, InventorySlot>();
 
         for (int i = 0; i < inventory.container.slots.Length; i++)
         {
@@ -22,7 +22,7 @@ public class StaticInterfaceScript : UserInventoryInterfaceScript
             AddEvent(slot, EventTriggerType.EndDrag, delegate { OnDragEnd(slot); });
             AddEvent(slot, EventTriggerType.Drag, delegate { OnDrag(slot); });
 
-            itemsDisplayed.Add(slot, inventory.container.slots[i]);
+            slotsOnInterface.Add(slot, inventory.container.slots[i]);
         }
     }
 }

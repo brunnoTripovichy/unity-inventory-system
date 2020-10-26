@@ -17,146 +17,146 @@ MonoBehaviour:
   container:
     slots:
     - item:
-        id: 0
+        id: -1
         name: 
         buffs: []
-      id: -1
       amount: 0
+      allowedItems: 
     - item:
-        id: 0
+        id: -1
         name: 
         buffs: []
-      id: -1
       amount: 0
+      allowedItems: 
     - item:
-        id: 0
+        id: -1
         name: 
         buffs: []
-      id: -1
       amount: 0
+      allowedItems: 
     - item:
-        id: 0
+        id: -1
         name: 
         buffs: []
-      id: -1
       amount: 0
+      allowedItems: 
     - item:
-        id: 0
+        id: -1
         name: 
         buffs: []
-      id: -1
       amount: 0
+      allowedItems: 
     - item:
-        id: 0
+        id: -1
         name: 
         buffs: []
-      id: -1
       amount: 0
+      allowedItems: 
     - item:
-        id: 0
+        id: -1
         name: 
         buffs: []
-      id: -1
       amount: 0
+      allowedItems: 
     - item:
-        id: 0
+        id: -1
         name: 
         buffs: []
-      id: -1
       amount: 0
+      allowedItems: 
     - item:
-        id: 0
+        id: -1
         name: 
         buffs: []
-      id: -1
       amount: 0
+      allowedItems: 
     - item:
-        id: 0
+        id: -1
         name: 
         buffs: []
-      id: -1
       amount: 0
+      allowedItems: 
     - item:
-        id: 0
+        id: -1
         name: 
         buffs: []
-      id: -1
       amount: 0
+      allowedItems: 
     - item:
-        id: 0
+        id: -1
         name: 
         buffs: []
-      id: -1
       amount: 0
+      allowedItems: 
     - item:
-        id: 0
+        id: -1
         name: 
         buffs: []
-      id: -1
       amount: 0
+      allowedItems: 
     - item:
-        id: 0
+        id: -1
         name: 
         buffs: []
-      id: -1
       amount: 0
+      allowedItems: 
     - item:
-        id: 0
+        id: -1
         name: 
         buffs: []
-      id: -1
       amount: 0
+      allowedItems: 
     - item:
-        id: 0
+        id: -1
         name: 
         buffs: []
-      id: -1
       amount: 0
+      allowedItems: 
     - item:
-        id: 0
+        id: -1
         name: 
         buffs: []
-      id: -1
       amount: 0
+      allowedItems: 
     - item:
-        id: 0
+        id: -1
         name: 
         buffs: []
-      id: -1
       amount: 0
+      allowedItems: 
     - item:
-        id: 0
+        id: -1
         name: 
         buffs: []
-      id: -1
       amount: 0
+      allowedItems: 
     - item:
-        id: 0
+        id: -1
         name: 
         buffs: []
-      id: -1
       amount: 0
+      allowedItems: 
     - item:
-        id: 0
+        id: -1
         name: 
         buffs: []
-      id: -1
       amount: 0
+      allowedItems: 
     - item:
-        id: 0
+        id: -1
         name: 
         buffs: []
-      id: -1
       amount: 0
+      allowedItems: 
     - item:
-        id: 0
+        id: -1
         name: 
         buffs: []
-      id: -1
       amount: 0
+      allowedItems: 
     - item:
-        id: 0
+        id: -1
         name: 
         buffs: []
-      id: -1
       amount: 0
+      allowedItems: 

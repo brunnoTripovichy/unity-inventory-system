@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class DynamicInterfaceScript : UserInventoryInterfaceScript
+public class DynamicInventoryInterface : UserInventoryInterface
 {
     public GameObject inventoryPrefab;
 
@@ -15,7 +15,7 @@ public class DynamicInterfaceScript : UserInventoryInterfaceScript
 
     public override void CreateSlots()
     {
-        itemsDisplayed = new Dictionary<GameObject, InventorySlot>();
+        slotsOnInterface = new Dictionary<GameObject, InventorySlot>();
 
         for (int i = 0; i < inventory.container.slots.Length; i++)
         {
@@ -28,7 +28,7 @@ public class DynamicInterfaceScript : UserInventoryInterfaceScript
             AddEvent(obj, EventTriggerType.EndDrag, delegate { OnDragEnd(obj); });
             AddEvent(obj, EventTriggerType.Drag, delegate { OnDrag(obj); });
 
-            itemsDisplayed.Add(obj, inventory.container.slots[i]);
+            slotsOnInterface.Add(obj, inventory.container.slots[i]);
         }
     }
 

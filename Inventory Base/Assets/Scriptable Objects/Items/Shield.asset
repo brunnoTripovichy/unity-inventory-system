@@ -9,15 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 232ad0d1012fd1b43a2ca52a44b39552, type: 3}
+  m_Script: {fileID: 11500000, guid: 9d575860360a3fc4aab0aa282b937296, type: 3}
   m_Name: Shield
   m_EditorClassIdentifier: 
-  id: 2
   uiDisplay: {fileID: -3218289417291907054, guid: e5797ff041118c8499506c3c95a51415, type: 3}
+  stackable: 0
   type: 3
-  buffs:
-  - attribute: 0
-    value: 0
-    min: 1
-    max: 10
-  description: A small shield
+  data:
+    id: 5
+    name: 
+    buffs: []
+  description: 

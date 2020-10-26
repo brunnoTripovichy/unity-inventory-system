@@ -22,13 +22,14 @@ public enum Attributes
     STRENGTH
 }
 
-public abstract class ItemObject : ScriptableObject
+[CreateAssetMenu(fileName = "New Item", menuName = "Inventory System/Items/Item")]
+public class ItemObject : ScriptableObject
 {
 
-    public int id;
     public Sprite uiDisplay;
+    public bool stackable;
     public ItemType type;
-    public ItemBuffScript[] buffs; 
+    public Item data = new Item();
 
     [TextArea(15,20)]
     public string description;

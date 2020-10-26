@@ -5,9 +5,9 @@ using UnityEngine;
 [System.Serializable]
 public class Item
 {
-    public int id;
+    public int id = -1;
     public string name;
-    public ItemBuffScript[] buffs;
+    public ItemBuff[] buffs;
 
     public Item()
     {
@@ -17,15 +17,15 @@ public class Item
 
     public Item(ItemObject itemObject)
     {
-        id = itemObject.id;
+        id = itemObject.data.id;
         name = itemObject.name;
-        buffs = new ItemBuffScript[itemObject.buffs.Length];
+        buffs = new ItemBuff[itemObject.data.buffs.Length];
 
-        for (int i = 0; i < itemObject.buffs.Length; i++)
+        for (int i = 0; i < itemObject.data.buffs.Length; i++)
         {
-            buffs[i] = new ItemBuffScript(itemObject.buffs[i].min, itemObject.buffs[i].max)
+            buffs[i] = new ItemBuff(itemObject.data.buffs[i].min, itemObject.data.buffs[i].max)
             {
-                attribute = itemObject.buffs[i].attribute
+                attribute = itemObject.data.buffs[i].attribute
             };
         }
     }

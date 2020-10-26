@@ -2,38 +2,44 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerScript : MonoBehaviour
+public class Player : MonoBehaviour
 {
 
-    public MouseItem mouseItem = new MouseItem();
     public InventoryObject inventory;
+    public InventoryObject equipment;
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.F1))
         {
             inventory.Save();
+            equipment.Save();
         }
 
         if (Input.GetKeyDown(KeyCode.F2))
         {
             inventory.Load();
+            equipment.Load();
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        var itemScript = other.GetComponent<GroundItemScript>();
+        var item = other.GetComponent<GroundItemScript>();
         
-        if (itemScript)
+        if (item)
         {
-            inventory.AddItem(new Item(itemScript.item), 1);
-            Destroy(other.gameObject);
+            Item _item = new Item(item.item);
+            if (inventory.AddItem(_item, 1))
+            {
+                Destroy(other.gameObject);
+            }
         }
     }
 
     private void OnApplicationQuit()
     {
-        inventory.container.slots = new InventorySlot[24];
+        inventory.container.Clear();
+        equipment.container.Clear();
     }
 }
