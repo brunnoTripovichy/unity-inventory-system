@@ -7,6 +7,21 @@ public class Player : MonoBehaviour
 
     public InventoryObject inventory;
     public InventoryObject equipment;
+    public Attribute[] attributes;
+
+    private void Start()
+    {
+        foreach (var att in attributes)
+        {
+            att.SetParent(this);
+        }
+
+        foreach (var slot in equipment.GetSlots)
+        {
+            slot.OnBeforeUpdate += OnBeforeSlotUpdate;
+            slot.OnAfterUpdate += OnAfterSlotUpdate;
+        }
+    }
 
     private void Update()
     {
@@ -20,6 +35,70 @@ public class Player : MonoBehaviour
         {
             inventory.Load();
             equipment.Load();
+        }
+    }
+
+    public void OnBeforeSlotUpdate(InventorySlot _slot)
+    {
+        if (_slot.ItemObject == null)
+        {
+            return;
+        }
+
+        switch (_slot.parent.inventory.interfaceType)
+        {
+            case UserInterfaceType.INVENTORY:
+                break;
+            case UserInterfaceType.EQUIPMENT:
+
+                foreach (var buff in _slot.item.buffs)
+                {
+                    foreach (var attribute in attributes)
+                    {
+                        if (attribute.type == buff.attribute)
+                        {
+                            attribute.value.RemoveModifier(buff);
+                        }
+                    }
+                }
+
+                break;
+            case UserInterfaceType.CHEST:
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void OnAfterSlotUpdate(InventorySlot _slot)
+    {
+        if (_slot.ItemObject == null)
+        {
+            return;
+        }
+
+        switch (_slot.parent.inventory.interfaceType)
+        {
+            case UserInterfaceType.INVENTORY:
+                break;
+            case UserInterfaceType.EQUIPMENT:
+
+                foreach (var buff in _slot.item.buffs)
+                {
+                    foreach (var attribute in attributes)
+                    {
+                        if (attribute.type == buff.attribute)
+                        {
+                            attribute.value.AddModifier(buff);
+                        }
+                    }
+                }
+
+                break;
+            case UserInterfaceType.CHEST:
+                break;
+            default:
+                break;
         }
     }
 
@@ -37,9 +116,14 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void AttributeModified(Attribute attribute)
+    {
+
+    }
+
     private void OnApplicationQuit()
     {
-        inventory.container.Clear();
-        equipment.container.Clear();
+        inventory.Clear();
+        equipment.Clear();
     }
 }

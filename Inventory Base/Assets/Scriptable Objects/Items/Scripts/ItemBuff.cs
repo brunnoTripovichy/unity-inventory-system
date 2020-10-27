@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class ItemBuff
+public class ItemBuff: IModifier
 {
     public Attributes attribute;
     public int value;
@@ -15,6 +15,11 @@ public class ItemBuff
         min = _min;
         max = _max;
         GenerateValue();
+    }
+
+    public void AddValue(ref int baseValue)
+    {
+        baseValue += value;
     }
 
     public void GenerateValue()

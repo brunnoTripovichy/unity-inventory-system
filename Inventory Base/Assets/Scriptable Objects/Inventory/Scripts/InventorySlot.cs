@@ -8,20 +8,28 @@ public class InventorySlot
 
     [System.NonSerialized]
     public UserInventoryInterface parent;
+
+    [System.NonSerialized]
+    public GameObject slotDisplay;
+
+    [System.NonSerialized]
+    public SlotUpdated OnAfterUpdate;
+
+    [System.NonSerialized]
+    public SlotUpdated OnBeforeUpdate;
+
     public Item item;
     public int amount;
     public ItemType[] allowedItems = new ItemType[0];
 
     public InventorySlot()
     {
-        item = new Item();
-        amount = 0;
+        UpdateSlot(new Item(), 0);
     }
 
     public InventorySlot(Item _itemObject, int _amount)
     {
-        item = _itemObject;
-        amount = _amount;
+        UpdateSlot(_itemObject, _amount);
     }
 
     public ItemObject ItemObject
@@ -30,7 +38,7 @@ public class InventorySlot
         {
             if (item.id >= 0)
             {
-                return parent.inventory.database.items[item.id];
+                return parent.inventory.database.itemObjects[item.id];
             }
             return null;
         }
@@ -38,19 +46,28 @@ public class InventorySlot
 
     public void UpdateSlot(Item _itemObject, int _amount)
     {
+        if (OnBeforeUpdate != null)
+        {
+            OnBeforeUpdate.Invoke(this);
+        }
+
         item = _itemObject;
         amount = _amount;
+
+        if (OnAfterUpdate != null)
+        {
+            OnAfterUpdate.Invoke(this);
+        }
     }
 
     public void RemoveItem()
     {
-        item = new Item();
-        amount = 0;
+        UpdateSlot(new Item(), 0);
     }
 
     public void AddAmount(int value)
     {
-        amount += value;
+        UpdateSlot(item, amount += value);
     }
 
     public bool CanPlaceInSlot(ItemObject _itemObject)
@@ -71,3 +88,5 @@ public class InventorySlot
         return false;
     }
 }
+
+public delegate void SlotUpdated(InventorySlot _slot);

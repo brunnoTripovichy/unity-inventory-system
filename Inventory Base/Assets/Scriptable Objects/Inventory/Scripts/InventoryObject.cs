@@ -7,13 +7,29 @@ using System.Runtime.Serialization.Formatters.Binary;
 using UnityEditor;
 using UnityEngine;
 
+public enum UserInterfaceType
+{
+    INVENTORY,
+    EQUIPMENT,
+    CHEST
+}
+
 [CreateAssetMenu(fileName = "New Inventory", menuName = "Inventory System/Inventory")]
 public class InventoryObject : ScriptableObject
 {
 
     public string savePath;
     public ItemDatabaseObject database;
+    public UserInterfaceType interfaceType;
     public Inventory container;
+
+    public InventorySlot[] GetSlots
+    {
+        get
+        {
+            return container.slots;
+        }
+    }
 
     public bool AddItem(Item item, int amount)
     {
@@ -23,7 +39,7 @@ public class InventoryObject : ScriptableObject
         }
 
         InventorySlot slot = FinditemOnInventory(item);
-        if (!database.items[item.id].stackable || slot == null)
+        if (!database.itemObjects[item.id].stackable || slot == null)
         {
             SetEmptySlot(item, amount);
             return true;
@@ -35,11 +51,11 @@ public class InventoryObject : ScriptableObject
 
     public InventorySlot FinditemOnInventory(Item item)
     {
-        for (int i = 0; i < container.slots.Length; i++)
+        for (int i = 0; i < GetSlots.Length; i++)
         {
-            if (container.slots[i].item.id == item.id)
+            if (GetSlots[i].item.id == item.id)
             {
-                return container.slots[i];
+                return GetSlots[i];
             }
         }
 
@@ -52,9 +68,9 @@ public class InventoryObject : ScriptableObject
         {
             int count = 0;
 
-            for (int i = 0; i < container.slots.Length; i++)
+            for (int i = 0; i < GetSlots.Length; i++)
             {
-                if (container.slots[i].item.id <= -1)
+                if (GetSlots[i].item.id <= -1)
                 {
                     count++;
                 }
@@ -66,12 +82,12 @@ public class InventoryObject : ScriptableObject
 
     public InventorySlot SetEmptySlot(Item item, int _amount)
     {
-        for (int i = 0; i < container.slots.Length; i++)
+        for (int i = 0; i < GetSlots.Length; i++)
         {
-            if (container.slots[i].item.id <= -1)
+            if (GetSlots[i].item.id <= -1)
             {
-                container.slots[i].UpdateSlot(item, _amount);
-                return container.slots[i];
+                GetSlots[i].UpdateSlot(item, _amount);
+                return GetSlots[i];
             }
         }
 
@@ -91,7 +107,7 @@ public class InventoryObject : ScriptableObject
 
     public void RemoveItem(Item item)
     {
-        foreach (var slot in container.slots)
+        foreach (var slot in GetSlots)
         {
             if (slot.item == item)
             {
@@ -134,9 +150,9 @@ public class InventoryObject : ScriptableObject
             Stream stream = new FileStream(string.Concat(Application.persistentDataPath, savePath), FileMode.Open, FileAccess.Read);
             Inventory newContainer = (Inventory)formatter.Deserialize(stream);
 
-            for (int i = 0; i < container.slots.Length; i++)
+            for (int i = 0; i < GetSlots.Length; i++)
             {
-                container.slots[i].UpdateSlot(newContainer.slots[i].item, newContainer.slots[i].amount);
+                GetSlots[i].UpdateSlot(newContainer.slots[i].item, newContainer.slots[i].amount);
             }
 
             stream.Close();
